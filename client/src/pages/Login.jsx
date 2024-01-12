@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import axios from 'axios'
 
 function Login(){
 
@@ -7,8 +8,15 @@ function Login(){
         password: '',
     })
 
-    const loginUser = (e) => {
+    const loginUser = async (e) => {
         e.preventDefault()
+        try {
+            const response = await axios.post('/api/auth/login', data)
+            localStorage.setItem('token', response.data.token)
+            console.log('Logged in')
+        } catch (err) {
+            console.log(err.message)
+        }
     }
 
     return(
