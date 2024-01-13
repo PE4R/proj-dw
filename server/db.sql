@@ -2,5 +2,6 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
-    password VARCHAR(150) NOT NULL
+    password VARCHAR(150) NOT NULL,
+    isadmin BOOLEAN
 );

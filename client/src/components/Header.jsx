@@ -1,6 +1,18 @@
-import {Link} from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
+import Login from './LoginModal'
+import Register from './RegisterModal'
 
 function Header(){
+    const { isLoggedIn, logout } = useAuth()
+    const [showLogin, setShowLogin] = useState(false)
+    const [showRegister, setShowRegister] = useState(false)
+
+    const handleLogout = () => {
+        logout()
+        localStorage.removeItem('token')
+    }
 
     return(
         <header>
@@ -13,9 +25,23 @@ function Header(){
                 </ul>
             </nav>
             <ul className="login-bar">
-                <li><Link to='/login'>Login</Link></li>
-                <li><Link to='/register'>Register</Link></li>
+                {isLoggedIn? (
+                    <li>
+                        <Link to="/" onClick={handleLogout}>Logout</Link>
+                    </li>
+                ) : (
+                    <>
+                        <li>
+                            <Link to="/" onClick={(e) => { e.preventDefault(); setShowLogin(true); }}>Login</Link>
+                        </li>
+                        <li>
+                            <Link to="/" onClick={(e) => { e.preventDefault(); setShowRegister(true); }}>Register</Link>
+                        </li>
+                    </>
+                )}
             </ul>
+            {showLogin && <Login closeModal={() => setShowLogin(false)} />}
+            {showRegister && <Register closeModal={() => setShowRegister(false)} />}
         </header>
     )
 }
