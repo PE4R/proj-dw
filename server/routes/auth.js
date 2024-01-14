@@ -14,7 +14,15 @@ router.post('/register', async (req, res) =>{
             'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *',
             [name, email, hashedPassword]
         )
-        res.status(201).json(newUser.rows[0])
+        res.status(201).json({
+            message: 'Registered',
+            user: {
+                id: newUser.rows[0].id,
+                name: newUser.rows[0].name,
+                email: newUser.rows[0].email,
+                isadmin: false
+            }
+        })
     } catch (err) {
         console.error(err)
         res.status(500).json({ error: err.message })
@@ -50,7 +58,15 @@ router.post('/login', async (req, res) =>{
             secure: process.env.NODE_ENV === 'production',
         })
         
-        res.status(200).json({ message: 'Logged in'} )
+        res.status(200).json({
+            message: 'Logged in',
+            user: {
+                id: user.rows[0].id,
+                name: user.rows[0].name,
+                email: user.rows[0].email,
+                isadmin: user.rows[0].isadmin
+            }
+        })
 
     } catch (err) {
         console.error(err)
@@ -68,8 +84,30 @@ router.post('/logout', (req, res) => {
     res.status(200).json({ message: 'Logged out' })
 })
 
-router.get('/checkSession', authenticateToken, (req, res) => {
-    res.status(200).json({ message: 'Session valid' })
+router.get('/checkSession', authenticateToken, async (req, res) => {
+    const userId = req.user.id
+
+    try {
+        const user = await pool.query(
+            'SELECT id, name, email, isadmin FROM users WHERE id = $1',
+            [userId]
+        )
+
+        if (user.rows.length > 0) {
+            const userInfo = user.rows[0]
+            res.status(200).json({
+                id: userInfo.id,
+                name: userInfo.name,
+                email: userInfo.email,
+                isadmin: userInfo.isadmin
+            })
+        } else {
+            res.status(404).send('User not found')
+        }
+    } catch (err) {
+        console.error(err)
+        res.status(500).send('Server error')
+    }
 })
 
 module.exports = router

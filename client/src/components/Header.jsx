@@ -7,23 +7,28 @@ import axios from 'axios'
 axios.defaults.withCredentials = true;
 
 function Header(){
-    const { isLoggedIn, logout } = useAuth()
+    const { user, logout } = useAuth()
     const [showLogin, setShowLogin] = useState(false)
     const [showRegister, setShowRegister] = useState(false)
+    const [showUserMenu, setShowUserMenu] = useState(false)
 
     const handleLogout = async () => {
         try {
             await axios.post('/api/auth/logout')
             logout()
-            console.log('Logged out')
+            console.log('Logged out in header')
         } catch (err) {
             console.error(err.message)
         }
     }
 
+    const toggleUserMenu = () => {
+        setShowUserMenu(!showUserMenu)
+    }
+
     return(
         <header>
-            <h1>Alojamento</h1>
+            <h1>Casota</h1>
             <nav className="navbar">
                 <ul>
                     <li><Link to='/'>Home</Link></li>
@@ -32,10 +37,25 @@ function Header(){
                 </ul>
             </nav>
             <ul className="login-bar">
-                {isLoggedIn? (
-                    <li>
-                        <Link to="/" onClick={handleLogout}>Logout</Link>
-                    </li>
+                {user ? (
+                    <>
+                        <button onClick={toggleUserMenu}>{user.name}</button>
+                        {showUserMenu && (
+                            <ul className="user-menu">
+                                {user.isadmin ? (
+                                    <li>
+                                        <Link to='/accommodations'>Accommodations</Link>
+                                    </li>
+                                ) : null}
+                                <li>
+                                    <Link to='/reservations'>Reservations</Link>
+                                </li>
+                                <li>
+                                    <Link to="/" onClick={handleLogout}>Logout</Link>
+                                </li>
+                            </ul>
+                        )}
+                    </>
                 ) : (
                     <>
                         <li>

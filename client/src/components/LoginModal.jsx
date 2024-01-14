@@ -24,9 +24,9 @@ function Login({ closeModal }){
         e.preventDefault()
         try {
             const response = await axios.post('/api/auth/login', data)
-            login()
+            login(response.data.user)
             closeModal()
-            console.log('Logged in')
+            console.log('Logged in in modal')
         } catch (err) {
             console.log(err.message)
         }
