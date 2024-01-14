@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+axios.defaults.withCredentials = true;
 
 function Login({ closeModal }){
 
@@ -23,7 +24,6 @@ function Login({ closeModal }){
         e.preventDefault()
         try {
             const response = await axios.post('/api/auth/login', data)
-            localStorage.setItem('token', response.data.token)
             login()
             closeModal()
             console.log('Logged in')

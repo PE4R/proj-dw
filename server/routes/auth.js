@@ -43,12 +43,33 @@ router.post('/login', async (req, res) =>{
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         )
-        res.json({ token })
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: process.env.NODE_ENV === 'production',
+        })
+        
+        res.status(200).json({ message: 'Logged in'} )
 
     } catch (err) {
         console.error(err)
         res.status(500).json({ error: err.message })
     }
+})
+
+router.post('/logout', (req, res) => {
+    res.cookie('token', '', {
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        expires: new Date(0)
+    })
+    res.status(200).json({ message: 'Logged out' })
+})
+
+router.get('/checkSession', authenticateToken, (req, res) => {
+    res.status(200).json({ message: 'Session valid' })
 })
 
 module.exports = router

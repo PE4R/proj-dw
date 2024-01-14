@@ -3,15 +3,22 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import Login from './LoginModal'
 import Register from './RegisterModal'
+import axios from 'axios'
+axios.defaults.withCredentials = true;
 
 function Header(){
     const { isLoggedIn, logout } = useAuth()
     const [showLogin, setShowLogin] = useState(false)
     const [showRegister, setShowRegister] = useState(false)
 
-    const handleLogout = () => {
-        logout()
-        localStorage.removeItem('token')
+    const handleLogout = async () => {
+        try {
+            await axios.post('/api/auth/logout')
+            logout()
+            console.log('Logged out')
+        } catch (err) {
+            console.error(err.message)
+        }
     }
 
     return(

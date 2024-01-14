@@ -24,8 +24,8 @@ function Register({ closeModal }){
         e.preventDefault()
         try {
             const response = await axios.post('/api/auth/register', data)
-            console.log('Registered')
             closeModal()
+            console.log('Registered')
         } catch (err) {
             console.log(err.message)
         }
