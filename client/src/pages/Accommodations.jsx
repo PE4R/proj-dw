@@ -7,6 +7,7 @@ function Accommodations() {
     const { user, loading } = useAuth()
     const [accommodations, setAccommodations] = useState([])
     const [editingId, setEditingId] = useState(null)
+    const [searchQuery, setSearchQuery] = useState("")
 
     const [newAccommodation, setNewAccommodation] = useState({
         name: '',
@@ -101,6 +102,11 @@ function Accommodations() {
         }
     }
 
+    const filteredAccommodations = accommodations.filter(
+        accommodation =>
+        accommodation.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+
     if (loading) {
         return <div>Loading...</div>
     }
@@ -182,6 +188,13 @@ function Accommodations() {
                 </form>
             )}
 
+            <input
+                type="text"
+                placeholder="Search by name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+            />
+
             <table>
                 <thead>
                     <tr>
@@ -192,7 +205,7 @@ function Accommodations() {
                     </tr>
                 </thead>
                 <tbody>
-                    {accommodations.map(accommodation => (
+                    {filteredAccommodations.map(accommodation => (
                         <tr key={accommodation.id}>
                             <td>{accommodation.name}</td>
                             <td>{accommodation.description}</td>
