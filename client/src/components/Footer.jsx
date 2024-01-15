@@ -3,7 +3,7 @@ function Footer(){
 
     return(
         <footer>
-            <p>&copy; {new Date().getFullYear()} Alojamento</p>
+            <p>&copy; {new Date().getFullYear()} Casota</p>
         </footer>
     )
 }

@@ -28,7 +28,10 @@ function Home(){
     return(
         <div className="content">
             {accommodations.map(accommodation => (
-                <Link to={`/accommodations/${accommodation.id}`} key={accommodation.id}>
+                <Link 
+                    to={`/accommodations/${accommodation.id}`} 
+                    key={accommodation.id}
+                    className='link-card'>
                     <Card
                         key={accommodation.id}
                         name={accommodation.name}

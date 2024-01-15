@@ -32,22 +32,42 @@ function AccommodationDetail(){
     if (!accommodation) return <Navigate to='/not-found' replace />
 
     return(
-        <div>
+        <div className="acc-detail">
             <h1>{accommodation.name}</h1>
-            <img src={accommodation.image_url} alt={`Image of ${accommodation.name}`} />
             <p>{accommodation.description}</p>
-            {isValidLocation(accommodation.latitude, accommodation.longitude) && (
-                <MapContainer 
-                    center={[accommodation.latitude, accommodation.longitude]} 
-                    zoom={13} 
-                    style={{ height: '400px', width: '100%' }}>
-                    <TileLayer
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    />
-                    <Marker position={[accommodation.latitude, accommodation.longitude]}/>
-                </MapContainer>
-            )}
+            {/* map covers modals needs fix */}
+            <div className="acc-map-dates">
+                {isValidLocation(accommodation.latitude, accommodation.longitude) && (
+                    <div className="acc-map">
+                        <MapContainer 
+                            center={[accommodation.latitude, accommodation.longitude]} 
+                            zoom={13} 
+                            style={{ height: '150px', width: '300px',  zIndex: 0 }}>
+                            <TileLayer
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            />
+                            <Marker position={[accommodation.latitude, accommodation.longitude]}/>
+                        </MapContainer>
+                    </div>
+                )}
+                <div className="acc-dates">dates</div>
+            </div>
+            <img src={accommodation.image_url} alt={`Image of ${accommodation.name}`} />
+            <h3>Availability</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Capacity</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
         </div>
     )
 }

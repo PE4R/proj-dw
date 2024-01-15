@@ -2,11 +2,13 @@ import PropTypes from 'prop-types'
 
 function Card(props){
     return(
-        <div className='card'>
+        <article className='card'>
             <img className='card-image' src={props.src} alt={props.alt} />
-            <h3 className='card-title'>{props.name}</h3>
-            <p className='card-text'>{props.description}</p>
-        </div>
+            <div className='card-div'>
+                <h3 className='card-title'>{props.name}</h3>
+                <p className='card-text'>{props.description}</p>
+            </div>
+        </article>
     )
 }
 

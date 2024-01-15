@@ -127,10 +127,10 @@ function Accommodations() {
     }
 
     return (
-        <div>
+        <div className="management">
             <h1>Accommodations Management</h1>
             {editingId === null ? (
-                <form onSubmit={handleAdd}>
+                <form className="form-add" onSubmit={handleAdd}>
                     <input
                         type="text"
                         required
@@ -175,7 +175,7 @@ function Accommodations() {
                     <button type="submit">Add</button>
                 </form>
             ) : (
-                <form onSubmit={handleEdit}>
+                <form className="form-edit" onSubmit={handleEdit}>
                     <input
                         type="text"
                         required
@@ -224,6 +224,7 @@ function Accommodations() {
                 placeholder="Search by name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-bar"
             />
 
             <table>

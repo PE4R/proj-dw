@@ -31,9 +31,9 @@ function Header(){
             <h1>Casota</h1>
             <nav className="navbar">
                 <ul>
-                    <li><Link to='/'>Home</Link></li>
-                    <li><Link to='/about'>About</Link></li>
-                    <li><Link to='/contact'>Contact</Link></li>
+                    <li><button><Link to='/'>Home</Link></button></li>
+                    <li><button><Link to='/about'>About</Link></button></li>
+                    <li><button><Link to='/contact'>Contact</Link></button></li>
                 </ul>
             </nav>
             <ul className="login-bar">
