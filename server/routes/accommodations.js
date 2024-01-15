@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    const { name, description, imageUrl } = req.body
+    const { name, description, imageUrl, latitude, longitude } = req.body
 
     if (!name) {
         return res.status(400).json({ error: 'Name required.' })
@@ -40,8 +40,8 @@ router.post('/', async (req, res) => {
 
     try {
         const newAccommodation = await pool.query(
-            'INSERT INTO accommodations (name, description, image_url) VALUES ($1, $2, $3) RETURNING *',
-            [name, description, imageUrl]
+            'INSERT INTO accommodations (name, description, image_url, latitude, longitude) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [name, description, imageUrl, latitude, longitude]
         )
         res.json(newAccommodation.rows[0])
     } catch (err) {
@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     const { id } = req.params
-    const { name, description, imageUrl } = req.body
+    const { name, description, imageUrl, latitude, longitude } = req.body
 
     if (!name) {
         return res.status(400).json({ error: 'Name required.' })
@@ -60,8 +60,8 @@ router.put('/:id', async (req, res) => {
 
     try {
         const updateAccommodation = await pool.query(
-            'UPDATE accommodations SET name = $1, description = $2, image_url = $3 WHERE id = $4 RETURNING *',
-            [name, description, imageUrl, id]
+            'UPDATE accommodations SET name = $1, description = $2, image_url = $3, latitude = $4, longitude = $5 WHERE id = $6 RETURNING *',
+            [name, description, imageUrl, latitude, longitude, id]
         )
         if (updateAccommodation.rows.length === 0){
             return res.status(404).send('Accommodation not found')

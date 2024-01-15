@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Navigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import axios from "axios"
+import LocationPicker from "../components/LocationPicker"
 
 function Accommodations() {
     const { user, loading } = useAuth()
@@ -12,13 +13,17 @@ function Accommodations() {
     const [newAccommodation, setNewAccommodation] = useState({
         name: '',
         description: '',
-        imageUrl: ''
+        imageUrl: '',
+        latitude: '',
+        longitude: ''
     });
 
     const [editAccommodation, setEditAccommodation] = useState({
         name: '',
         description: '',
-        imageUrl: ''
+        imageUrl: '',
+        latitude: '',
+        longitude: ''
     });
 
     useEffect(() => {
@@ -46,7 +51,9 @@ function Accommodations() {
             setNewAccommodation({
                 name: '',
                 description: '',
-                imageUrl: ''
+                imageUrl: '',
+                latitude: '',
+                longitude: ''
             })
         } catch (err) {
             console.error('Error adding accommodation:', err)
@@ -57,7 +64,9 @@ function Accommodations() {
         setEditAccommodation({
             name: accommodation.name,
             description: accommodation.description,
-            imageUrl: accommodation.image_url
+            imageUrl: accommodation.image_url,
+            latitude: accommodation.latitude,
+            longitude: accommodation.longitude
         })
         setEditingId(accommodation.id)
     }
@@ -89,7 +98,9 @@ function Accommodations() {
         setEditAccommodation({
           name: '',
           description: '',
-          imageUrl: ''
+          imageUrl: '',
+          latitude: '',
+          longitude: ''
         })
     }
 
@@ -151,6 +162,16 @@ function Accommodations() {
                         })}
                         placeholder="image url"
                     />
+                    <LocationPicker 
+                        initialPosition={{ lat: newAccommodation.latitude || 0, lng: newAccommodation.longitude || 0 }} 
+                        onLocationChange={(latlng) => {
+                            setNewAccommodation({
+                                ...newAccommodation,
+                                latitude: latlng.lat,
+                                longitude: latlng.lng
+                            })
+                        }}
+                    />
                     <button type="submit">Add</button>
                 </form>
             ) : (
@@ -183,6 +204,16 @@ function Accommodations() {
                         })}
                         placeholder="image url"
                     />
+                    <LocationPicker 
+                        initialPosition={{ lat: editAccommodation.latitude || 0, lng: editAccommodation.longitude || 0 }}
+                        onLocationChange={(latlng) => {
+                            setEditAccommodation({
+                                ...editAccommodation,
+                                latitude: latlng.lat,
+                                longitude: latlng.lng
+                            })
+                        }}
+                    />
                     <button type="submit">Save Changes</button>
                     <button type="button" onClick={cancelEdit}>Cancel</button>
                 </form>
@@ -201,6 +232,8 @@ function Accommodations() {
                         <th>Name</th>
                         <th>Description</th>
                         <th>Image URL</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -210,6 +243,8 @@ function Accommodations() {
                             <td>{accommodation.name}</td>
                             <td>{accommodation.description}</td>
                             <td>{accommodation.image_url}</td>
+                            <td>{accommodation.latitude}</td>
+                            <td>{accommodation.longitude}</td>
                             <td>
                                 <button onClick={() => startEdit(accommodation)}>Edit</button>
                                 <button onClick={() => handleDelete(accommodation.id)}>Delete</button>
