@@ -10,10 +10,17 @@ function Login({ closeModal }){
     const navigate = useNavigate()
 
     useEffect(() => {
+        document.body.classList.add('modal-open')
+
         if (isLoggedIn) {
             closeModal()
         }
-    }, [isLoggedIn, navigate])
+
+        return () => {
+            document.body.classList.remove('modal-open');
+        }
+
+    }, [isLoggedIn, closeModal, navigate])
 
     const [data, setData] = useState({
         email: '',

@@ -4,7 +4,7 @@ import axios from "axios"
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 
-function AccommodationDetail(){
+function AccommodationDetail({ showLogin, showRegister}){
     const { id } = useParams()
     const [accommodation, setAccommodation] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -35,9 +35,9 @@ function AccommodationDetail(){
         <div className="acc-detail">
             <h1>{accommodation.name}</h1>
             <p>{accommodation.description}</p>
-            {/* map covers modals needs fix */}
             <div className="acc-map-dates">
                 {isValidLocation(accommodation.latitude, accommodation.longitude) && (
+                    <>
                     <div className="acc-map">
                         <MapContainer 
                             center={[accommodation.latitude, accommodation.longitude]} 
@@ -50,6 +50,8 @@ function AccommodationDetail(){
                             <Marker position={[accommodation.latitude, accommodation.longitude]}/>
                         </MapContainer>
                     </div>
+                    <div className="map-placeholder"></div>
+                    </>
                 )}
                 <div className="acc-dates">dates</div>
             </div>
