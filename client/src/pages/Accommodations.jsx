@@ -65,11 +65,15 @@ function Accommodations() {
             name: accommodation.name,
             description: accommodation.description,
             imageUrl: accommodation.image_url,
-            latitude: accommodation.latitude,
-            longitude: accommodation.longitude
+            latitude: Number(accommodation.latitude),
+            longitude: Number(accommodation.longitude)
         })
         setEditingId(accommodation.id)
+
+        setKey(Math.random())
     }
+
+    const [key, setKey] = useState(Math.random())
 
     const handleEdit = async (e) => {
         e.preventDefault()
@@ -131,37 +135,41 @@ function Accommodations() {
             <h1>Accommodations Management</h1>
             {editingId === null ? (
                 <form className="form-add" onSubmit={handleAdd}>
-                    <input
-                        type="text"
-                        required
-                        className=""
-                        value={newAccommodation.name}
-                        onChange={e => setNewAccommodation({
-                            ...newAccommodation, 
-                            name: e.target.value
-                        })}
-                        placeholder="name (required)"
-                    />
-                    <input
-                        type="text"
-                        className=""
-                        value={newAccommodation.description}
-                        onChange={e => setNewAccommodation({
-                            ...newAccommodation, 
-                            description: e.target.value
-                        })}
-                        placeholder="description"
-                    />
-                    <input
-                        type="text"
-                        className=""
-                        value={newAccommodation.imageUrl}
-                        onChange={e => setNewAccommodation({
-                            ...newAccommodation, 
-                            imageUrl: e.target.value
-                        })}
-                        placeholder="image url"
-                    />
+                    <div className="form-div">
+                        <input
+                            type="text"
+                            required
+                            className=""
+                            value={newAccommodation.name}
+                            onChange={e => setNewAccommodation({
+                                ...newAccommodation, 
+                                name: e.target.value
+                            })}
+                            placeholder="name (required)"
+                        />
+                        <input
+                            type="text"
+                            className=""
+                            value={newAccommodation.description}
+                            onChange={e => setNewAccommodation({
+                                ...newAccommodation, 
+                                description: e.target.value
+                            })}
+                            placeholder="description"
+                        />
+                        <input
+                            type="text"
+                            className=""
+                            value={newAccommodation.imageUrl}
+                            onChange={e => setNewAccommodation({
+                                ...newAccommodation, 
+                                imageUrl: e.target.value
+                            })}
+                            placeholder="image url"
+                        />
+                        <button type="submit">Add</button>
+                    </div>
+                    
                     <LocationPicker 
                         initialPosition={{ lat: newAccommodation.latitude || 0, lng: newAccommodation.longitude || 0 }} 
                         onLocationChange={(latlng) => {
@@ -172,39 +180,44 @@ function Accommodations() {
                             })
                         }}
                     />
-                    <button type="submit">Add</button>
                 </form>
             ) : (
                 <form className="form-edit" onSubmit={handleEdit}>
-                    <input
-                        type="text"
-                        required
-                        value={editAccommodation.name}
-                        onChange={e => setEditAccommodation({
-                            ...editAccommodation, 
-                            name: e.target.value
-                        })}
-                        placeholder="name (required)"
-                    />
-                    <input
-                        type="text"
-                        value={editAccommodation.description}
-                        onChange={e => setEditAccommodation({
-                            ...editAccommodation, 
-                            description: e.target.value
-                        })}
-                        placeholder="description"
-                    />
-                    <input
-                        type="text"
-                        value={editAccommodation.imageUrl}
-                        onChange={e => setEditAccommodation({
-                            ...editAccommodation, 
-                            imageUrl: e.target.value
-                        })}
-                        placeholder="image url"
-                    />
-                    <LocationPicker 
+                    <div className="form-div">
+                        <input
+                            type="text"
+                            required
+                            value={editAccommodation.name}
+                            onChange={e => setEditAccommodation({
+                                ...editAccommodation, 
+                                name: e.target.value
+                            })}
+                            placeholder="name (required)"
+                        />
+                        <input
+                            type="text"
+                            value={editAccommodation.description}
+                            onChange={e => setEditAccommodation({
+                                ...editAccommodation, 
+                                description: e.target.value
+                            })}
+                            placeholder="description"
+                        />
+                        <input
+                            type="text"
+                            value={editAccommodation.imageUrl}
+                            onChange={e => setEditAccommodation({
+                                ...editAccommodation, 
+                                imageUrl: e.target.value
+                            })}
+                            placeholder="image url"
+                        />
+                        <button type="submit">Save Changes</button>
+                        <button type="button" onClick={cancelEdit}>Cancel</button>
+                    </div>
+                    
+                    <LocationPicker
+                        key={key}
                         initialPosition={{ lat: editAccommodation.latitude || 0, lng: editAccommodation.longitude || 0 }}
                         onLocationChange={(latlng) => {
                             setEditAccommodation({
@@ -214,8 +227,6 @@ function Accommodations() {
                             })
                         }}
                     />
-                    <button type="submit">Save Changes</button>
-                    <button type="button" onClick={cancelEdit}>Cancel</button>
                 </form>
             )}
 
@@ -227,33 +238,36 @@ function Accommodations() {
                 className="search-bar"
             />
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Image URL</th>
-                        <th>Latitude</th>
-                        <th>Longitude</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredAccommodations.map(accommodation => (
-                        <tr key={accommodation.id}>
-                            <td>{accommodation.name}</td>
-                            <td>{accommodation.description}</td>
-                            <td>{accommodation.image_url}</td>
-                            <td>{accommodation.latitude}</td>
-                            <td>{accommodation.longitude}</td>
-                            <td>
-                                <button onClick={() => startEdit(accommodation)}>Edit</button>
-                                <button onClick={() => handleDelete(accommodation.id)}>Delete</button>
-                            </td>
+            <div className="table-container">
+                <table className="table-accommodations">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Image URL</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th>Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {filteredAccommodations.map(accommodation => (
+                            <tr key={accommodation.id}>
+                                <td>{accommodation.name}</td>
+                                <td>{accommodation.description}</td>
+                                <td>{accommodation.image_url}</td>
+                                <td>{accommodation.latitude}</td>
+                                <td>{accommodation.longitude}</td>
+                                <td>
+                                    <button onClick={() => startEdit(accommodation)}>Edit</button>
+                                    <button onClick={() => handleDelete(accommodation.id)}>Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            
         </div>
     )
 }
