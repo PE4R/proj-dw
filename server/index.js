@@ -2,13 +2,14 @@ const express = require('express')
 const cors = require('cors')
 const authRoutes = require('./routes/auth')
 const accommodationRoutes = require('./routes/accommodations')
-const cookieParser = require('cookie-parser');
+const reservationRoutes = require('./routes/reservations')
+const cookieParser = require('cookie-parser')
 
 require('dotenv').config()
 
 if (!process.env.JWT_SECRET || !process.env.DB_PASSWORD) {
-    console.error('ERROR: Missing required environment variables.');
-    process.exit(1); // Exit with a failure code
+    console.error('ERROR: Missing required environment variables.')
+    process.exit(1)
 }
 
 const app = express()
@@ -24,6 +25,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use('/api/auth', authRoutes)
 app.use('/api/accommodations', accommodationRoutes)
+app.use('/api/reservations', reservationRoutes)
 
 app.listen(port, () => {
     console.log(`server running on port ${port}`)

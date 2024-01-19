@@ -8,9 +8,11 @@ function AccommodationDetail({ showLogin, showRegister}){
     const { id } = useParams()
     const [accommodation, setAccommodation] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
+    const [dates, setDates] = useState({ start_date: '', end_date: '' })
+    const [availableAccommodations, setAvailableAccommodations] = useState([])
 
     const isValidLocation = (lat, lng) => {
-        return !isNaN(lat) && !isNaN(lng) && lat !== null && lng !== null;
+        return !isNaN(lat) && !isNaN(lng) && lat !== null && lng !== null
     }
 
     useEffect(() => {
@@ -26,7 +28,47 @@ function AccommodationDetail({ showLogin, showRegister}){
         }
         fetchAccommodation()
     }, [id])
-    
+
+    useEffect(() => {
+        if (dates.start_date && dates.end_date) {
+            const fetchAvailableAccommodations = async () => {
+                try {
+                    const response = await axios.get(`/api/accommodations/available?start_date=${dates.start_date}&end_date=${dates.end_date}&accommodation_id=${id}`)
+                    setAvailableAccommodations(response.data)
+                } catch (err) {
+                    console.error('Error fetching available accommodations:', err)
+                }
+            }
+            fetchAvailableAccommodations()
+        }
+    }, [dates])
+
+    const handleBooking = async (accommodationId) => {
+        try {
+            const response = await axios.post('/api/reservations', {
+                accommodation_id : accommodationId,
+                start_date: dates.start_date,
+                end_date: dates.end_date
+            })
+
+            alert(`Booking successful for ${accommodation.name} from ${dates.start_date} to ${dates.end_date}`)
+
+            console.log('Reservation successful:', response.data)
+
+        } catch (err) {
+            console.error('Error making reservation:', err)
+            alert('Error making reservation: ' + (err.response ? err.response.data.error : err.message))
+        }
+    }
+
+    const calculateTotalPrice = (pricePerDay) => {
+        const startDate = new Date(dates.start_date)
+        const endDate = new Date(dates.end_date)
+        const timeDiff = endDate - startDate
+        const days = timeDiff / (1000 * 60 * 60 * 24)
+        return pricePerDay * days
+    }
+
     if (isLoading) return <div>Loading...</div>
 
     if (!accommodation) return <Navigate to='/not-found' replace />
@@ -53,7 +95,24 @@ function AccommodationDetail({ showLogin, showRegister}){
                     <div className="map-placeholder"></div>
                     </>
                 )}
-                <div className="acc-dates">dates</div>
+                <div className="acc-dates">
+                    <label>Start Date:
+                        <input
+                            type="date"
+                            name="start_date"
+                            value={dates.start_date}
+                            onChange={(e) => setDates({ ...dates, start_date: e.target.value})}
+                        />
+                    </label>
+                    <label>End Date:
+                        <input
+                            type="date"
+                            name="end_date"
+                            value={dates.end_date}
+                            onChange={(e) => setDates({ ...dates, end_date: e.target.value})}
+                        />
+                    </label>
+                </div>
             </div>
             <img src={accommodation.image_url} alt={`Image of ${accommodation.name}`} />
             <h3>Availability</h3>
@@ -67,7 +126,16 @@ function AccommodationDetail({ showLogin, showRegister}){
                     </tr>
                 </thead>
                 <tbody>
-
+                    {availableAccommodations.map((acc, index) => (
+                        <tr key={index}>
+                            <td>{acc.type}</td>
+                            <td>{acc.capacity}</td>
+                            <td>{calculateTotalPrice(acc.price)}€</td>
+                            <td>
+                                <button onClick={() => handleBooking(acc.id)}>Book</button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

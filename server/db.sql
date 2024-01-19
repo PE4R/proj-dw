@@ -10,7 +10,10 @@ CREATE TABLE accommodations (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    image_url TEXT
+    image_url TEXT,
+    type VARCHAR(255),
+    capacity INT,
+    price DECIMAL
 );
 
 CREATE TABLE reservations (

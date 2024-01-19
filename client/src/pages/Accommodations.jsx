@@ -139,7 +139,6 @@ function Accommodations() {
                         <input
                             type="text"
                             required
-                            className=""
                             value={newAccommodation.name}
                             onChange={e => setNewAccommodation({
                                 ...newAccommodation, 
@@ -149,7 +148,6 @@ function Accommodations() {
                         />
                         <input
                             type="text"
-                            className=""
                             value={newAccommodation.description}
                             onChange={e => setNewAccommodation({
                                 ...newAccommodation, 
@@ -159,13 +157,39 @@ function Accommodations() {
                         />
                         <input
                             type="text"
-                            className=""
                             value={newAccommodation.imageUrl}
                             onChange={e => setNewAccommodation({
                                 ...newAccommodation, 
                                 imageUrl: e.target.value
                             })}
                             placeholder="image url"
+                        />
+                        <input
+                            type="text"
+                            value={newAccommodation.type}
+                            onChange={(e) => setNewAccommodation({
+                                ...newAccommodation,
+                                type: e.target.value
+                            })}
+                            placeholder="Type"
+                        />
+                        <input
+                            type="number"
+                            value={newAccommodation.capacity}
+                            onChange={(e) => setNewAccommodation({
+                                ...newAccommodation,
+                                capacity: e.target.value
+                            })}
+                            placeholder="Capacity"
+                        />
+                        <input
+                            type="text"
+                            value={newAccommodation.price}
+                            onChange={(e) => setNewAccommodation({
+                                ...newAccommodation,
+                                price: e.target.value
+                            })}
+                            placeholder="Price"
                         />
                         <button type="submit">Add</button>
                     </div>
@@ -212,6 +236,33 @@ function Accommodations() {
                             })}
                             placeholder="image url"
                         />
+                        <input
+                            type="text"
+                            value={editAccommodation.type}
+                            onChange={(e) => setEditAccommodation({
+                                ...editAccommodation,
+                                type: e.target.value
+                            })}
+                            placeholder="Type"
+                        />
+                        <input
+                            type="number"
+                            value={editAccommodation.capacity}
+                            onChange={(e) => setEditAccommodation({
+                                ...editAccommodation,
+                                capacity: e.target.value
+                            })}
+                            placeholder="Capacity"
+                        />
+                        <input
+                            type="text"
+                            value={editAccommodation.price}
+                            onChange={(e) => setEditAccommodation({
+                                ...editAccommodation,
+                                price: e.target.value
+                            })}
+                            placeholder="Price"
+                        />
                         <button type="submit">Save Changes</button>
                         <button type="button" onClick={cancelEdit}>Cancel</button>
                     </div>
@@ -245,8 +296,9 @@ function Accommodations() {
                             <th>Name</th>
                             <th>Description</th>
                             <th>Image URL</th>
-                            <th>Latitude</th>
-                            <th>Longitude</th>
+                            <th>Type</th>
+                            <th>Capacity</th>
+                            <th>Price</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -256,8 +308,9 @@ function Accommodations() {
                                 <td>{accommodation.name}</td>
                                 <td>{accommodation.description}</td>
                                 <td>{accommodation.image_url}</td>
-                                <td>{accommodation.latitude}</td>
-                                <td>{accommodation.longitude}</td>
+                                <td>{accommodation.type}</td>
+                                <td>{accommodation.capacity}</td>
+                                <td>{accommodation.price}</td>
                                 <td>
                                     <button onClick={() => startEdit(accommodation)}>Edit</button>
                                     <button onClick={() => handleDelete(accommodation.id)}>Delete</button>
