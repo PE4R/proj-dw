@@ -325,7 +325,7 @@ function Accommodations() {
                                 <td>{accommodation.image_url}</td>
                                 <td>{accommodation.type}</td>
                                 <td>{accommodation.capacity}</td>
-                                <td>{accommodation.price}</td>
+                                <td>{accommodation.price}€</td>
                                 <td>
                                     <button onClick={() => startEdit(accommodation)}>Edit</button>
                                     <button onClick={() => handleDelete(accommodation.id)}>Delete</button>

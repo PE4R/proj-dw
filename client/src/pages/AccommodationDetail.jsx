@@ -71,12 +71,15 @@ function AccommodationDetail() {
         }
     }
 
-    const calculateTotalPrice = (pricePerDay) => {
+    const getDays = () => {
         const startDate = new Date(dates.start_date)
         const endDate = new Date(dates.end_date)
-        const timeDiff = endDate - startDate
-        const days = timeDiff / (1000 * 60 * 60 * 24)
-        return pricePerDay * days
+        const days = (endDate - startDate) / (1000 * 60 * 60 * 24)
+        return days
+    }
+
+    const calculateTotalPrice = (pricePerDay) => {
+        return pricePerDay * getDays()
     }
 
     if (isLoading) return <div>Loading...</div>
@@ -106,7 +109,7 @@ function AccommodationDetail() {
                     </>
                 )}
                 <div className="acc-dates">
-                    <label>Start Date:
+                    <label>Start Date
                         <input
                             type="date"
                             name="start_date"
@@ -114,7 +117,7 @@ function AccommodationDetail() {
                             onChange={(e) => setDates({ ...dates, start_date: e.target.value})}
                         />
                     </label>
-                    <label>End Date:
+                    <label>End Date
                         <input
                             type="date"
                             name="end_date"
@@ -125,29 +128,43 @@ function AccommodationDetail() {
                 </div>
             </div>
             <img src={accommodation.image_url} alt={`Image of ${accommodation.name}`} />
-            <h3>Availability</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Capacity</th>
-                        <th>Price</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {availableAccommodations.map((acc, index) => (
-                        <tr key={index}>
-                            <td>{acc.type}</td>
-                            <td>{acc.capacity}</td>
-                            <td>{calculateTotalPrice(acc.price)}€</td>
-                            <td>
-                                <button onClick={() => handleBooking(acc.id)}>Book</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <h3>Check Availability</h3>
+            {dates.start_date && dates.end_date ? (
+                <div className="table-container">
+                    <table className="table-availability">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Capacity</th>
+                                <th>Days</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {availableAccommodations.map((acc, index) => (
+                                <tr key={index} className="row-availability">
+                                    <td>{acc.type}</td>
+                                    <td>{acc.capacity}</td>
+                                    <td>{getDays()}</td>
+                                    <td>{calculateTotalPrice(acc.price)}€</td>
+                                    <td>
+                                        <button 
+                                            className="button-book"
+                                            onClick={() => handleBooking(acc.id)}
+                                        >
+                                            Book
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                
+            ) : (
+                <p className="date-prompt">To view available accommodations, please choose your check-in and check-out dates above.</p>
+            )}
         </div>
     )
 }

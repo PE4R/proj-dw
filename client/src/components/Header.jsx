@@ -39,7 +39,9 @@ function Header(){
             <ul className="login-bar">
                 {user ? (
                     <>
-                        <button onClick={toggleUserMenu}>{user.name}</button>
+                        <li>
+                            <button onClick={toggleUserMenu}>{user.name}</button>
+                        </li>
                         {showUserMenu && (
                             <ul className="user-menu">
                                 {user.isadmin ? (
@@ -59,10 +61,16 @@ function Header(){
                 ) : (
                     <>
                         <li>
-                            <Link to="/" onClick={(e) => { e.preventDefault(); setShowLogin(true); }}>Login</Link>
+                            <Link 
+                                to="/"
+                                id='login'
+                                onClick={(e) => { e.preventDefault(); setShowLogin(true); }}>Login</Link>
                         </li>
                         <li>
-                            <Link to="/" onClick={(e) => { e.preventDefault(); setShowRegister(true); }}>Register</Link>
+                            <Link 
+                                to="/" 
+                                id='register'
+                                onClick={(e) => { e.preventDefault(); setShowRegister(true); }}>Register</Link>
                         </li>
                     </>
                 )}

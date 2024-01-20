@@ -13,63 +13,65 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
+  padding: 1rem 2rem;
   margin-bottom: 1rem;
-  background-color: white;
+  background-color: #04aa94;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
   text-transform: uppercase;
   letter-spacing: 0.4rem;
+  margin: 0;
 }
 
 .navbar ul,
 .login-bar {
   display: flex;
-  flex-direction: row;
   list-style: none;
-  column-gap: 8rem;
+  gap: 2rem;
+  margin: 0;
 }
 
 .navbar ul a,
-.navbar ul button,
-.login-bar a,
+.login-bar #login,
+.login-bar #register,
 .login-bar button {
-  color: rgb(39, 39, 39);
+  color: white;
   font-size: 1rem;
   text-decoration: none;
+  cursor: pointer;
+  padding: 1rem 1rem;
+  border-radius: 0.3rem;
+  transition: background-color 0.3s;
+}
+
+.navbar ul button,
+.login-bar button {
   background: none;
   border: none;
-  cursor: pointer;
-  transition: color 0.3s ease;
 }
 
 .navbar ul a:hover,
-.navbar ul button:hover,
 .login-bar a:hover,
 .login-bar button:hover {
-  color: #1a8cff;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .user-menu {
   position: absolute;
-  right: 0;
-  background-color: white;
+  right: 1rem;
+  background-color: #f9f9f9;
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: 0;
-  margin-top: 2rem;
+  padding: 0.5rem 0;
+  margin-top: 3rem;
   list-style: none;
   z-index: 1000;
 }
 
-.user-menu li {
-  padding: 8px 12px;
-}
-
 .user-menu li:hover {
-  background-color: #f7f7f7;
+  background-color: #f0f0f0;
 }
 
 .user-menu li a,
@@ -77,8 +79,12 @@ header h1 {
   display: block;
   color: black;
   text-decoration: none;
-  width: 100%;
   text-align: left;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 1rem 0.5rem;
+  border-radius: 0.3rem;
 }
 
 .user-menu li button {
@@ -203,6 +209,42 @@ header h1 {
   column-gap: 1rem;
 }
 
+.acc-dates {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+  border: 1px solid #e0e0e0;
+  margin: 20px 0;
+  padding: 15px 10%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+}
+
+.acc-dates label {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 5px;
+}
+
+.acc-dates label span {
+  color: #333;
+}
+
+.acc-dates input {
+  padding: 8px 10px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  color: #333;
+}
+
+.acc-dates input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
 .modal-open .acc-map {
   display: none;
 }
@@ -277,4 +319,43 @@ header h1 {
   padding: 0.5rem 0;
   background-color: #04aa94;
   color: white;
+}
+
+.table-availability {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-availability th,
+.table-availability td {
+  text-align: left;
+  padding: 8px;
+}
+
+.table-availability tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table-availability tbody tr:hover{
+  background-color: #ddd;
+}
+
+.button-book {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.4rem;
+  font-size: 1rem;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.button-book:hover {
+  background-color: #04aa94;
+}
+
+.date-prompt {
+  font-style: italic;
+  color: #666;
 }

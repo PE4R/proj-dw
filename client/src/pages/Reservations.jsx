@@ -11,6 +11,7 @@ function Reservations(){
     const [accommodations, setAccommodations] = useState([])
     const [editingId, setEditingId] = useState(null)
     const [users, setUsers] = useState([])
+    const [searchQuery, setSearchQuery] = useState("")
 
     const [newReservation, setNewReservation] = useState({
         userId: '',
@@ -195,6 +196,11 @@ function Reservations(){
         }
     }
 
+    const filteredReservations = allReservations.filter(
+        reservation =>
+        reservation.user_name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+
     if (loading) return <div>Loading...</div>
     
     if (!user) return <Navigate to='/' />
@@ -355,6 +361,15 @@ function Reservations(){
                         </div>
                     </form>
                 )}
+
+                <input
+                    type="text"
+                    placeholder="Search by user name..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-bar"
+                />
+
                 <div className="table-container">
                     <table className="table-accommodations">
                         <thead>
@@ -369,7 +384,7 @@ function Reservations(){
                             </tr>
                         </thead>
                         <tbody>
-                            {allReservations.map((reservation) => (
+                            {filteredReservations.map((reservation) => (
                                 <tr key={reservation.id}>
                                     <td>{reservation.user_id}</td>
                                     <td>{reservation.user_name}</td>
