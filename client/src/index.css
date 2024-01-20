@@ -359,3 +359,78 @@ header h1 {
   font-style: italic;
   color: #666;
 }
+
+.about-page,
+.contact-page {
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 1rem;
+  line-height: 1.6;
+}
+
+.about-page h1,
+.about-page h2,
+.contact-page h1,
+.contact-page h2 {
+  color: #333;
+}
+
+.about-page p,
+.contact-page p,
+.contact-page a {
+  color: #666;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.contact-page a {
+  text-decoration: none;
+  color: #1a8cff;
+}
+
+.contact-page a:hover {
+  text-decoration: underline;
+}
+
+.contact-page ul {
+  list-style: none;
+  padding: 0;
+}
+
+.contact-details,
+.contact-form {
+  margin-bottom: 2rem;
+}
+
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form label {
+  margin-bottom: 0.5rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.contact-form button {
+  padding: 0.5rem 1rem;
+  background-color: #04aa94;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.contact-form button:hover {
+  background-color: #038c7a;
+}
