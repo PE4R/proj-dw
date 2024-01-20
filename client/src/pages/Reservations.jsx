@@ -206,10 +206,10 @@ function Reservations(){
     if (!user) return <Navigate to='/' />
 
     return(
-        <div className="management">
+        <div className="management management-reservations">
             <h1>Reservations Management</h1>
             <div className="table-container">
-                <table className="table-accommodations">
+                <table className="table-management">
                     <thead>
                         <tr>
                             <th>Accommodation</th>
@@ -371,7 +371,7 @@ function Reservations(){
                 />
 
                 <div className="table-container">
-                    <table className="table-accommodations">
+                    <table className="table-management">
                         <thead>
                             <tr>
                                 <th>User ID</th>

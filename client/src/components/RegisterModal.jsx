@@ -17,7 +17,7 @@ function Register({ closeModal }){
         }
 
         return () => {
-            document.body.classList.remove('modal-open');
+            document.body.classList.remove('modal-open')
         }
 
     }, [isLoggedIn, closeModal, navigate])

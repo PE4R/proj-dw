@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true
 
 function Login({ closeModal }){
 
@@ -17,7 +17,7 @@ function Login({ closeModal }){
         }
 
         return () => {
-            document.body.classList.remove('modal-open');
+            document.body.classList.remove('modal-open')
         }
 
     }, [isLoggedIn, closeModal, navigate])

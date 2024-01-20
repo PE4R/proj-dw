@@ -305,7 +305,7 @@ function Accommodations() {
             />
 
             <div className="table-container">
-                <table className="table-accommodations">
+                <table className="table-management">
                     <thead>
                         <tr>
                             <th>Name</th>
