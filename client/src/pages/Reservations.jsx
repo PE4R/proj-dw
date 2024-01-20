@@ -6,19 +6,23 @@ import { formatDate } from '../utility/helperFunctions'
 
 function Reservations(){
     const { user, loading } = useAuth()
-    const [reservations, setReservations] = useState([])
+    const [userReservations, setUserReservations] = useState([])
+    const [allReservations, setAllReservations] = useState([])
     const [accommodations, setAccommodations] = useState([])
     const [editingId, setEditingId] = useState(null)
+    const [users, setUsers] = useState([])
 
     const [newReservation, setNewReservation] = useState({
+        userId: '',
         accommodationId: '',
         startDate: '',
         endDate: '',
-        status: ''
+        status: 'pending'
     })
 
     const [editReservation, setEditReservation] = useState({
         id: '',
+        userId: '',
         accommodationId: '',
         startDate: '',
         endDate: '',
@@ -27,31 +31,72 @@ function Reservations(){
 
     useEffect(() => {
         if (user) {
-            const fetchReservations = async () => {
+            const fetchUserReservations = async () => {
                 try {
                     const response = await axios.get('api/reservations/my')
-                    setReservations(response.data)
+                    setUserReservations(response.data)
                     console.log(response.data)
                 } catch (err) {
                     console.error('Error fetching reservations:', err.message)
                 }
             }
+            const fetchAllReservations = async () => {
+                try {
+                    const response = await axios.get('/api/reservations/all')
+                    setAllReservations(response.data)
+                } catch (err) {
+                    console.error('Error fetching all reservations:', err.message)
+                }
+            }
             const fetchAccommodations = async () => {
                 try {
-                    const response = await axios.get('/api/accommodations');
+                    const response = await axios.get('/api/accommodations')
                     setAccommodations(response.data)
+                    console.log(response.data)
                 } catch (err) {
                     console.error('Error fetching accommodations:', err.message)
                 }
             }
+            const fetchUsers = async () => {
+                try {
+                    const response = await axios.get('/api/users/all')
+                    setUsers(response.data)
+                } catch (err) {
+                    console.error('Error fetching users:', err.message)
+                }
+            }
 
-            fetchReservations()
+            fetchUserReservations()
 
             if (user.isadmin) {
+                fetchUsers()
                 fetchAccommodations()
+                fetchAllReservations()
             }
         }
     }, [user])
+
+    const handlePay = async (id) => {
+        try {
+            const response = await axios.patch(`/api/reservations/updateStatus/${id}`, { status: 'confirmed' })
+            setUserReservations(userReservations.map(reservation => 
+                reservation.id === id ? { ...reservation, status: 'confirmed' } : reservation
+            ))
+        } catch (err) {
+            console.error('Error updating reservation:', err)
+        }
+    }
+    
+    const handleCancel = async (id) => {
+        try {
+            const response = await axios.patch(`/api/reservations/updateStatus/${id}`, { status: 'cancelled' })
+            setUserReservations(userReservations.map(reservation => 
+                reservation.id === id ? { ...reservation, status: 'cancelled' } : reservation
+            ))
+        } catch (err) {
+            console.error('Error updating reservation:', err)
+        }
+    }
 
     const handleAccommodationChange = (e) => {
         setNewReservation({
@@ -62,20 +107,47 @@ function Reservations(){
 
     const handleAdd = async (e) => {
         e.preventDefault()
+
+        if (!newReservation.userId || !newReservation.accommodationId) {
+            alert("Please select both a user and an accommodation.")
+            return
+        }
+
         try {
             const response = await axios.post('/api/reservations', newReservation)
+
+            const userName = users.find(user => user.id.toString() === newReservation.userId).name
+
+            const accommodationName = accommodations.find(acc => acc.id.toString() === newReservation.accommodationId).name
+
+            setAllReservations(prev => [...prev, {
+                ...response.data,
+                user_name: userName,
+                accommodation_name: accommodationName
+            }])
+
+            setNewReservation({
+                id: '',
+                userId: '',
+                accommodationId: '',
+                startDate: '',
+                endDate: '',
+                status: ''
+            })
         } catch (err) {
             console.error(err.message)
         }
     }
 
     const startEdit = (reservation) => {
+        console.log("Editing reservation:", reservation)
         setEditReservation({
             id: reservation.id,
+            userId: reservation.user_id,
             accommodationId: reservation.accommodation_id,
             startDate: reservation.start_date.split('T')[0],
             endDate: reservation.end_date.split('T')[0],
-            status: reservation.status
+            status: reservation.status || 'pending'
         })
         setEditingId(reservation.id)
     }
@@ -83,15 +155,27 @@ function Reservations(){
     const handleEdit = async (e) => {
         e.preventDefault()
         try {
-            const response = await axios.put(`/api/reservations/${editReservation.id}`, editReservation)
+            const response = await axios.put(
+                `/api/reservations/${editReservation.id}`,
+                editReservation
+            )
+
+            setAllReservations(allReservations.map((reservation) => {
+                if (reservation.id === editReservation.id) {
+                    return { ...reservation, ...response.data }
+                }
+                return reservation
+            }))
+
             cancelEdit()
+
         } catch (err) {
             console.error(err.message)
         }
     }
 
     const cancelEdit = () => {
-        setEditingId(null);
+        setEditingId(null)
         setEditReservation({
             id: '',
             accommodationId: '',
@@ -104,6 +188,8 @@ function Reservations(){
     const handleDelete = async (id) => {
         try {
             await axios.delete(`/api/reservations/${id}`)
+            setUserReservations(prevReservations => prevReservations.filter(reservation => reservation.id !== id))
+            setAllReservations(prevReservations => prevReservations.filter(reservation => reservation.id !== id))
         } catch (err) {
             console.error('Error deleting Reservation:', err)
         }
@@ -128,15 +214,15 @@ function Reservations(){
                         </tr>
                     </thead>
                     <tbody>
-                        {reservations.map((reservation) => (
+                        {userReservations.map((reservation) => (
                             <tr key={reservation.id}>
                                 <td>{reservation.accommodation_name}</td>
                                 <td>{formatDate(reservation.start_date)}</td>
                                 <td>{formatDate(reservation.end_date)}</td>
                                 <td>{reservation.status}</td>
                                 <td>
-                                    <button onClick="{ }">Pay</button>
-                                    <button onClick="{ }">Cancel</button>
+                                    <button onClick={() => handlePay(reservation.id)}>Pay</button>
+                                    <button onClick={() => handleCancel(reservation.id)}>Cancel</button>
                                 </td>
                             </tr>
                         ))}
@@ -151,14 +237,29 @@ function Reservations(){
                     <form onSubmit={handleAdd} className="form-add">
                         <div className="form-div">
                             <select
+                                value={newReservation.userId}
+                                onChange={(e) => setNewReservation({
+                                    ...newReservation,
+                                    userId: e.target.value
+                                })}
+                            >
+                                <option value="">Select a User</option>
+                                {users.map((user) => (
+                                    <option key={user.id} value={user.id}>
+                                        {user.id} - {user.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <select
                                 value={newReservation.accommodationId}
                                 onChange={handleAccommodationChange}
                             >
-                                {accommodations.map((acc) => {
+                                <option value="">Select an Accommodation</option>
+                                {accommodations.map((acc) => (
                                     <option key={acc.id} value={acc.id}>
                                         {acc.name}
                                     </option>
-                                })}
+                                ))}
                             </select>
                             <input
                                 type="date"
@@ -196,6 +297,19 @@ function Reservations(){
                 ) : (
                     <form onSubmit={handleEdit} className="form-edit">
                         <div className="form-div">
+                            <select
+                                value={editReservation.userId}
+                                onChange={(e) => setEditReservation({
+                                    ...editReservation,
+                                    userId: e.target.value
+                                })}
+                            >
+                                {users.map((user) => (
+                                    <option key={user.id} value={user.id}>
+                                        {user.id} - {user.name}
+                                    </option>
+                                ))}
+                            </select>
                             <select
                                 value={editReservation.accommodationId}
                                 onChange={(e) => setEditReservation({
@@ -255,7 +369,7 @@ function Reservations(){
                             </tr>
                         </thead>
                         <tbody>
-                            {reservations.map((reservation) => (
+                            {allReservations.map((reservation) => (
                                 <tr key={reservation.id}>
                                     <td>{reservation.user_id}</td>
                                     <td>{reservation.user_name}</td>

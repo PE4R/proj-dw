@@ -3,6 +3,7 @@ const cors = require('cors')
 const authRoutes = require('./routes/auth')
 const accommodationRoutes = require('./routes/accommodations')
 const reservationRoutes = require('./routes/reservations')
+const userRoutes = require('./routes/users')
 const cookieParser = require('cookie-parser')
 
 require('dotenv').config()
@@ -26,6 +27,7 @@ app.use(cookieParser())
 app.use('/api/auth', authRoutes)
 app.use('/api/accommodations', accommodationRoutes)
 app.use('/api/reservations', reservationRoutes)
+app.use('/api/users', userRoutes)
 
 app.listen(port, () => {
     console.log(`server running on port ${port}`)

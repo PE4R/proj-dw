@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useParams, Navigate } from "react-router-dom"
 import axios from "axios"
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
+import { useAuth } from '../../context/AuthContext'
 
-function AccommodationDetail({ showLogin, showRegister}){
+function AccommodationDetail() {
+    const { user } = useAuth()
     const { id } = useParams()
     const [accommodation, setAccommodation] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
@@ -44,11 +46,19 @@ function AccommodationDetail({ showLogin, showRegister}){
     }, [dates])
 
     const handleBooking = async (accommodationId) => {
+
+        if (!user) {
+            alert('You must be logged in to make a reservation.')
+            return
+        }
+
         try {
             const response = await axios.post('/api/reservations', {
-                accommodation_id : accommodationId,
-                start_date: dates.start_date,
-                end_date: dates.end_date
+                userId: user.id,
+                accommodationId: accommodationId,
+                startDate: dates.start_date,
+                endDate: dates.end_date,
+                status: 'pending'
             })
 
             alert(`Booking successful for ${accommodation.name} from ${dates.start_date} to ${dates.end_date}`)

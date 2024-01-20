@@ -15,16 +15,22 @@ function Accommodations() {
         description: '',
         imageUrl: '',
         latitude: '',
-        longitude: ''
-    });
+        longitude: '',
+        type: '',
+        capacity: 0,
+        price: ''
+    })
 
     const [editAccommodation, setEditAccommodation] = useState({
         name: '',
         description: '',
         imageUrl: '',
         latitude: '',
-        longitude: ''
-    });
+        longitude: '',
+        type: '',
+        capacity: 0,
+        price: ''
+    })
 
     useEffect(() => {
         if (user && user.isadmin){
@@ -53,7 +59,10 @@ function Accommodations() {
                 description: '',
                 imageUrl: '',
                 latitude: '',
-                longitude: ''
+                longitude: '',
+                type: '',
+                capacity: 0,
+                price: ''
             })
         } catch (err) {
             console.error('Error adding accommodation:', err)
@@ -66,7 +75,10 @@ function Accommodations() {
             description: accommodation.description,
             imageUrl: accommodation.image_url,
             latitude: Number(accommodation.latitude),
-            longitude: Number(accommodation.longitude)
+            longitude: Number(accommodation.longitude),
+            type: accommodation.type,
+            capacity: Number(accommodation.capacity),
+            price: accommodation.price
         })
         setEditingId(accommodation.id)
 
@@ -98,13 +110,16 @@ function Accommodations() {
     }
 
     const cancelEdit = () => {
-        setEditingId(null);
+        setEditingId(null)
         setEditAccommodation({
           name: '',
           description: '',
           imageUrl: '',
           latitude: '',
-          longitude: ''
+          longitude: '',
+          type: '',
+          capacity: 0,
+          price: ''
         })
     }
 
